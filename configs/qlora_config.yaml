@@ -1,0 +1,40 @@
+# QLoRA (Quantized LoRA) fine-tuning configuration
+
+_base: base_config.yaml
+
+training:
+  model:
+    base_model: meta-llama/Llama-2-7b-hf
+    use_peft: true
+    peft_type: qlora
+  batch_size: 2
+  gradient_accumulation_steps: 8
+  learning_rate: 2.0e-5
+  num_epochs: 3
+  warmup_ratio: 0.03
+  gradient_checkpointing: true
+  bf16: true
+  fp16: false
+
+peft:
+  qlora:
+    load_in_4bit: true
+    bnb_4bit_compute_dtype: bfloat16
+    bnb_4bit_quant_type: nf4
+    bnb_4bit_use_double_quant: true
+  lora:
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    target_modules:
+      - q_proj
+      - v_proj
+      - k_proj
+      - o_proj
+    bias: none
+    task_type: CAUSAL_LM
+  inference_mode: false
+
+compute:
+  num_gpus: 1
+  distributed_backend: null

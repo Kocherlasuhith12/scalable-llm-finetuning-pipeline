@@ -1,0 +1,33 @@
+# LoRA (Low-Rank Adaptation) fine-tuning configuration
+
+_base: base_config.yaml
+
+training:
+  model:
+    base_model: meta-llama/Llama-2-7b-hf
+    use_peft: true
+    peft_type: lora
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-5
+  num_epochs: 3
+  warmup_ratio: 0.03
+  gradient_checkpointing: true
+
+peft:
+  lora:
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    target_modules:
+      - q_proj
+      - v_proj
+      - k_proj
+      - o_proj
+    bias: none
+    task_type: CAUSAL_LM
+  inference_mode: false
+
+compute:
+  num_gpus: 2
+  distributed_backend: deepspeed

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+
+outputs/
+wandb/
+
+data/processed/
+data/*.jsonl
+
+.DS_Store

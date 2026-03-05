@@ -1,0 +1,51 @@
+# DPO (Direct Preference Optimization) alignment config
+# Use after SFT: train on (prompt, chosen, rejected) preference data
+
+_base: base_config.yaml
+
+project:
+  name: llm-finetuning-dpo
+  experiment_tracking: wandb
+
+data:
+  preference_data_path: data/processed/preferences.jsonl  # prompt, chosen, rejected per line
+
+training:
+  model:
+    base_model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+    use_peft: true
+  batch_size: 1
+  gradient_accumulation_steps: 16
+  learning_rate: 5.0e-7
+  num_epochs: 1
+  warmup_ratio: 0.1
+  save_steps: 100
+  logging_steps: 10
+  gradient_checkpointing: true
+  bf16: false
+  fp16: false
+
+dpo:
+  beta: 0.1
+  loss_type: sigmoid
+  max_length: 512
+  max_prompt_length: 256
+  ref_model: null
+  ref_model: null  # null = use frozen copy of base
+
+peft:
+  lora:
+    r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    target_modules:
+      - q_proj
+      - v_proj
+      - k_proj
+      - o_proj
+    bias: none
+    task_type: CAUSAL_LM
+
+compute:
+  num_gpus: 1
+  distributed_backend: null

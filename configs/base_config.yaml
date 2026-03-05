@@ -1,0 +1,72 @@
+# Base configuration for LLM Fine-tuning Pipeline
+
+project:
+  name: llm-finetuning-pipeline
+  version: "1.0.0"
+  experiment_tracking: wandb  # wandb | mlflow
+
+storage:
+  type: s3  # s3 | gcs | azure
+  bucket: your-bucket-name
+  prefix: llm-finetuning
+  local_cache: ./data/cache
+
+data:
+  sources:
+    - type: file
+      path: ./data/raw
+    - type: api
+      endpoint: null
+  preprocessing:
+    max_sequence_length: 2048
+    min_sequence_length: 32
+    train_split: 0.95
+    validation_split: 0.05
+  quality:
+    min_quality_score: 0.7
+    dedupe_threshold: 0.9
+  augmentation:
+    enabled: false
+    techniques: []
+
+training:
+  model:
+    base_model: meta-llama/Llama-2-7b-hf
+    use_peft: true
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-5
+  num_epochs: 3
+  warmup_ratio: 0.03
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  fp16: true
+  bf16: false
+  gradient_checkpointing: true
+  deepspeed:
+    enabled: false
+    config: configs/ds_config.json
+
+evaluation:
+  metrics:
+    - perplexity
+    - rouge
+    - bleu
+  benchmark_suites:
+    - human_eval
+  eval_steps: 100
+  eval_batch_size: 8
+
+deployment:
+  quantization:
+    enabled: false
+    bits: 8
+  onnx_export: false
+  api:
+    framework: fastapi
+    workers: 4
+
+compute:
+  backend: local  # local | sagemaker | gcp_ai | azure_ml
+  num_gpus: 1
+  distributed_backend: null  # ray | horovod | deepspeed

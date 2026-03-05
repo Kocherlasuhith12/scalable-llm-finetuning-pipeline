@@ -1,0 +1,24 @@
+# Dockerfile for evaluation / inference
+FROM nvidia/cuda:12.1-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir torch transformers accelerate peft \
+    datasets pyyaml \
+    && rm -rf /root/.cache
+
+COPY src/ src/
+COPY configs/ configs/
+COPY scripts/ scripts/
+COPY workflows/ workflows/
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Mount checkpoint at /model; run eval or API
+CMD ["python", "scripts/evaluate_checkpoints.py", "--checkpoint-dir", "/model"]

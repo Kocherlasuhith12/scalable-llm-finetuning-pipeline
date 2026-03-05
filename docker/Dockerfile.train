@@ -1,0 +1,18 @@
+# Dockerfile for training image
+FROM nvidia/cuda:12.1-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 python3-pip git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Default: run training pipeline (override with docker run)
+CMD ["python", "-m", "workflows.dags.training_pipeline", "--config", "configs/lora_config.yaml"]
