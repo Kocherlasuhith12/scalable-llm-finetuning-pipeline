@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run DPO (Direct Preference Optimization) training from config and preference data."""
+"""Run DPO (Direct Preference Optimisation) training from config and preference data."""
 
 import argparse
 import sys
