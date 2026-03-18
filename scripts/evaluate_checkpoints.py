@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-# Allow running from project root
+# Allow running from project roots
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.utils.config_parser import load_config
