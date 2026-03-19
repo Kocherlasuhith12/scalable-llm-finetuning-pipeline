@@ -245,10 +245,18 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 
 ---
 
+---
+
 <div align="center">
 
-Built with 🧠 by [Kocherla Koteswara Suhith Sravan Babu](https://github.com/Kocherlasuhith12)
+<br>
 
-*If this project helped you, consider leaving a ⭐ — it means a lot.*
+*Built with 🧠 by* &nbsp; [![Author](https://img.shields.io/badge/Kocherla_Koteswara_Suhith_Sravan_Babu-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/Kocherlasuhith12)
+
+<br>
+
+> ⭐ If this project helped you, consider leaving a **star** — it means a lot. ⭐
+
+<br>
 
 </div>
