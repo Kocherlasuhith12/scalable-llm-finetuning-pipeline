@@ -6,7 +6,7 @@ project:
   experiment_tracking: wandb  # wandb | mlflow
 
 storage:
-  type: s3  # s3 | gcs | azure
+  type: s3  # s3 | gcs | azure 
   bucket: your-bucket-name
   prefix: llm-finetuning
   local_cache: ./data/cache
