@@ -7,7 +7,7 @@ from typing import Any, Optional
 logger = logging.getLogger(__name__)
 
 
-def run_data_preparation(
+def run_data_preparation( 
     config_path: str = "configs/base_config.yaml",
     output_dir: str = "data/processed",
     **kwargs: Any,
