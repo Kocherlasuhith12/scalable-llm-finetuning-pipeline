@@ -6,6 +6,6 @@ outputs/
 wandb/
  
 data/processed/
-data/*.jsonl
+data/*.jsonl 
 
 .DS_Store
