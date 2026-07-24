@@ -26,7 +26,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {leftIcon && <div className="absolute left-3 text-[#64748B] pointer-events-none">{leftIcon}</div>}
           <input
             ref={ref}
-            className={`w-full bg-[#09090B] border border-[#27272A] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] transition-all ${
+            className={`w-full bg-[#0A0A0C] border border-[#2A2A35] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-all ${
               leftIcon ? "pl-9" : ""
             } ${error ? "border-[#EF4444]" : ""} ${className}`}
             {...props}
@@ -53,13 +53,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && <Label>{label}</Label>}
         <select
           ref={ref}
-          className={`w-full bg-[#09090B] border border-[#27272A] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] transition-all cursor-pointer ${
+          className={`w-full bg-[#0A0A0C] border border-[#2A2A35] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] focus:outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-all cursor-pointer ${
             error ? "border-[#EF4444]" : ""
           } ${className}`}
           {...props}
         >
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-[#111318] text-[#F8FAFC]">
+            <option key={opt.value} value={opt.value} className="bg-[#121216] text-[#F8FAFC]">
               {opt.label}
             </option>
           ))}
@@ -83,7 +83,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && <Label>{label}</Label>}
         <textarea
           ref={ref}
-          className={`w-full bg-[#09090B] border border-[#27272A] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6] transition-all ${
+          className={`w-full bg-[#0A0A0C] border border-[#2A2A35] rounded-lg px-3.5 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] transition-all ${
             error ? "border-[#EF4444]" : ""
           } ${className}`}
           {...props}

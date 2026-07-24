@@ -13,7 +13,8 @@ import {
   Server,
   FlaskConical,
   LogOut,
-  Sparkles
+  Sparkles,
+  Zap
 } from "lucide-react";
 import { Tooltip } from "./Tooltip";
 import { Dropdown, DropdownItem, DropdownHeader, DropdownDivider } from "./Dropdown";
@@ -44,14 +45,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeWorkspace, setActiveWorkspace] = useState({
     id: "prod",
-    name: "Acme Enterprise",
-    subtitle: "Production Workspace",
-    icon: Building2
+    name: "HyperTune AI",
+    subtitle: "Enterprise Crimson Cluster",
+    icon: Zap
   });
 
   const workspaces = [
-    { id: "prod", name: "Acme Enterprise", subtitle: "Production Workspace", icon: Building2 },
-    { id: "staging", name: "Staging Cluster", subtitle: "US-East (N. Virginia)", icon: Server },
+    { id: "prod", name: "HyperTune AI", subtitle: "Enterprise Crimson Cluster", icon: Zap },
+    { id: "staging", name: "Staging Pod", subtitle: "US-East (N. Virginia)", icon: Server },
     { id: "research", name: "Research Lab", subtitle: "Experimental H100 Cluster", icon: FlaskConical }
   ];
 
@@ -64,26 +65,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
       initial={false}
       animate={{ width: isCollapsed ? 80 : 256 }}
       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-      className="bg-[#111318] border-r border-[#27272A] flex flex-col p-3 z-40 select-none relative h-screen sticky top-0"
+      className="bg-[#121216] border-r border-[#2A2A35] flex flex-col p-3 z-40 select-none relative h-screen sticky top-0"
     >
-      {/* Workspace Switcher Header */}
+      {/* Workspace Switcher Header (Berry UI Style) */}
       <div className="mb-4">
         <Dropdown
           align="left"
           className="w-60"
           trigger={
             <div
-              className={`flex items-center justify-between p-2.5 bg-[#171A21] border border-[#27272A] rounded-xl hover:border-[#8B5CF6]/50 transition-all cursor-pointer ${
+              className={`flex items-center justify-between p-2.5 bg-[#18181F] border border-[#2A2A35] rounded-xl hover:border-[#E11D48]/50 transition-all cursor-pointer ${
                 isCollapsed ? "justify-center" : ""
               }`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#8B5CF6] to-[#6D28D9] flex items-center justify-center font-bold text-xs text-white shadow-md shadow-[#8B5CF6]/20 flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#E11D48] to-[#9F1239] flex items-center justify-center font-bold text-xs text-white shadow-md shadow-[#E11D48]/25 flex-shrink-0">
                   <activeWorkspace.icon className="w-4 h-4 text-white" />
                 </div>
                 {!isCollapsed && (
                   <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-xs text-[#F8FAFC] truncate">
+                    <div className="font-bold text-xs text-[#F8FAFC] truncate">
                       {activeWorkspace.name}
                     </div>
                     <div className="text-[10px] text-[#94A3B8] truncate">
@@ -118,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Dropdown>
       </div>
 
-      {/* In-sidebar Search (Visible when expanded) */}
+      {/* In-sidebar Search */}
       {!isCollapsed && (
         <div className="mb-4 px-1">
           <div className="relative flex items-center">
@@ -128,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Quick filter..."
-              className="w-full bg-[#09090B] border border-[#27272A] rounded-lg pl-8 pr-3 py-1.5 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#8B5CF6] transition-all"
+              className="w-full bg-[#0A0A0C] border border-[#2A2A35] rounded-lg pl-8 pr-3 py-1.5 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-[#E11D48] transition-all"
             />
           </div>
         </div>
@@ -153,24 +154,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 isCollapsed ? "px-0 justify-center h-10" : "px-3 py-2.5"
               } rounded-lg text-xs font-medium transition-all relative cursor-pointer ${
                 isActive
-                  ? "bg-[#8B5CF6]/15 text-[#A78BFA]"
-                  : "text-[#94A3B8] hover:bg-[#171A21] hover:text-[#F8FAFC]"
+                  ? "bg-[#E11D48]/15 text-[#F43F5E]"
+                  : "text-[#94A3B8] hover:bg-[#18181F] hover:text-[#F8FAFC]"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="sidebarActivePill"
-                  className="absolute left-0 top-1 bottom-1 w-1 bg-[#8B5CF6] rounded-r-full shadow-[0_0_10px_#8B5CF6]"
+                  className="absolute left-0 top-1 bottom-1 w-1 bg-[#E11D48] rounded-r-full shadow-[0_0_12px_#E11D48]"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               <div className="flex items-center gap-2.5">
-                <IconComponent className={`w-4 h-4 ${isActive ? "text-[#8B5CF6]" : "text-[#64748B]"}`} />
+                <IconComponent className={`w-4 h-4 ${isActive ? "text-[#E11D48]" : "text-[#64748B]"}`} />
                 {!isCollapsed && <span>{item.label}</span>}
               </div>
 
               {!isCollapsed && item.count !== undefined && item.count > 0 && (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[#8B5CF6]/20 text-[#A78BFA]">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[#E11D48]/20 text-[#F43F5E]">
                   {item.count}
                 </span>
               )}
@@ -190,11 +191,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Footer Profile & Collapse Toggle */}
-      <div className="pt-3 border-t border-[#27272A] space-y-3">
+      <div className="pt-3 border-t border-[#2A2A35] space-y-3">
         {!isCollapsed && (
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-[#8B5CF6] flex items-center justify-center font-bold text-xs text-white shadow-sm flex-shrink-0">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#E11D48] to-[#9F1239] flex items-center justify-center font-bold text-xs text-white shadow-sm flex-shrink-0">
                 {userName.charAt(0)}
               </div>
               <div className="min-w-0">
@@ -207,7 +208,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <button
           onClick={() => setIsCollapsed((prev) => !prev)}
-          className="w-full flex items-center justify-center p-2 rounded-lg bg-[#171A21] border border-[#27272A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#8B5CF6]/40 transition-all cursor-pointer text-xs gap-2"
+          className="w-full flex items-center justify-center p-2 rounded-lg bg-[#18181F] border border-[#2A2A35] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#E11D48]/40 transition-all cursor-pointer text-xs gap-2"
         >
           {isCollapsed ? (
             <ChevronRight className="w-4 h-4" />

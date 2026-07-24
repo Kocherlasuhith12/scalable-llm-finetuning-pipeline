@@ -159,9 +159,9 @@ export function DataTable<T extends Record<string, any>>({
   };
 
   return (
-    <div className="bg-[#171A21]/90 backdrop-blur-md border border-[#27272A] rounded-xl overflow-hidden shadow-lg space-y-0">
+    <div className="bg-[#18181F]/90 backdrop-blur-md border border-[#2A2A35] rounded-xl overflow-hidden shadow-lg space-y-0">
       {/* Header bar */}
-      <div className="p-4 border-b border-[#27272A] bg-[#111318]/80 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 border-b border-[#2A2A35] bg-[#121216]/80 flex flex-wrap items-center justify-between gap-3">
         <div>
           {title && <h3 className="text-sm font-bold text-[#F8FAFC] tracking-tight">{title}</h3>}
           {description && <p className="text-xs text-[#94A3B8] mt-0.5">{description}</p>}
@@ -184,11 +184,11 @@ export function DataTable<T extends Record<string, any>>({
           )}
 
           {filterable && filterOptions.length > 0 && (
-            <div className="flex items-center gap-1 bg-[#09090B] border border-[#27272A] rounded-lg p-1">
+            <div className="flex items-center gap-1 bg-[#0A0A0C] border border-[#2A2A35] rounded-lg p-1">
               <button
                 onClick={() => setSelectedFilter("ALL")}
                 className={`px-2.5 py-1 text-[11px] font-semibold rounded-md transition-all cursor-pointer ${
-                  selectedFilter === "ALL" ? "bg-[#8B5CF6] text-white" : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                  selectedFilter === "ALL" ? "bg-[#E11D48] text-white shadow-sm" : "text-[#94A3B8] hover:text-[#F8FAFC]"
                 }`}
               >
                 All
@@ -198,7 +198,7 @@ export function DataTable<T extends Record<string, any>>({
                   key={opt.value}
                   onClick={() => setSelectedFilter(opt.value)}
                   className={`px-2.5 py-1 text-[11px] font-semibold rounded-md transition-all cursor-pointer ${
-                    selectedFilter === opt.value ? "bg-[#8B5CF6] text-white" : "text-[#94A3B8] hover:text-[#F8FAFC]"
+                    selectedFilter === opt.value ? "bg-[#E11D48] text-white shadow-sm" : "text-[#94A3B8] hover:text-[#F8FAFC]"
                   }`}
                 >
                   {opt.label}
@@ -223,7 +223,7 @@ export function DataTable<T extends Record<string, any>>({
       {/* Table Area */}
       <div className="w-full overflow-x-auto max-h-[480px]">
         <table className="w-full text-left text-xs">
-          <thead className="sticky top-0 bg-[#111318]/95 backdrop-blur-md border-b border-[#27272A] text-[#64748B] uppercase tracking-wider text-[10px] font-bold z-10">
+          <thead className="sticky top-0 bg-[#121216]/95 backdrop-blur-md border-b border-[#2A2A35] text-[#64748B] uppercase tracking-wider text-[10px] font-bold z-10">
             <tr>
               {columns.map((col) => (
                 <th
@@ -236,7 +236,7 @@ export function DataTable<T extends Record<string, any>>({
                   <div className="inline-flex items-center gap-1.5">
                     <span>{col.label}</span>
                     {col.sortable !== false && (
-                      <span className="text-[#8B5CF6]">
+                      <span className="text-[#E11D48]">
                         {sortKey === col.key ? (
                           sortDirection === "asc" ? (
                             <ArrowUp className="w-3 h-3" />
@@ -255,7 +255,7 @@ export function DataTable<T extends Record<string, any>>({
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-[#27272A]/40 text-[#F8FAFC]">
+          <tbody className="divide-y divide-[#2A2A35]/40 text-[#F8FAFC]">
             {isLoading ? (
               Array.from({ length: rowsPerPage }).map((_, i) => (
                 <SkeletonRow key={i} columns={columns.length + (rowActions ? 1 : 0)} />
@@ -264,7 +264,7 @@ export function DataTable<T extends Record<string, any>>({
               <tr>
                 <td colSpan={columns.length + (rowActions ? 1 : 0)} className="py-12 text-center">
                   <div className="max-w-xs mx-auto space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/15 text-[#A78BFA] flex items-center justify-center mx-auto">
+                    <div className="w-10 h-10 rounded-full bg-[#E11D48]/15 text-[#F43F5E] flex items-center justify-center mx-auto">
                       <Inbox className="w-5 h-5" />
                     </div>
                     <div className="font-semibold text-sm text-[#F8FAFC]">{emptyTitle}</div>
@@ -278,7 +278,7 @@ export function DataTable<T extends Record<string, any>>({
                 return (
                   <motion.tr
                     key={item.id || idx}
-                    whileHover={{ backgroundColor: "rgba(31, 37, 48, 0.6)" }}
+                    whileHover={{ backgroundColor: "rgba(34, 34, 43, 0.7)" }}
                     transition={{ duration: 0.15 }}
                     onClick={() => onRowClick && onRowClick(item)}
                     className={`transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
@@ -299,7 +299,7 @@ export function DataTable<T extends Record<string, any>>({
                         <Dropdown
                           align="right"
                           trigger={
-                            <button className="p-1 rounded-lg text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#111318] transition-all cursor-pointer">
+                            <button className="p-1 rounded-lg text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#121216] transition-all cursor-pointer">
                               <MoreVertical className="w-4 h-4" />
                             </button>
                           }
@@ -326,7 +326,7 @@ export function DataTable<T extends Record<string, any>>({
       </div>
 
       {/* Pagination Footer */}
-      <div className="p-3.5 border-t border-[#27272A] bg-[#111318]/90 flex items-center justify-between text-xs text-[#94A3B8]">
+      <div className="p-3.5 border-t border-[#2A2A35] bg-[#121216]/90 flex items-center justify-between text-xs text-[#94A3B8]">
         <div className="flex items-center gap-3">
           <span>
             Showing <strong className="text-[#F8FAFC]">{sortedData.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0}</strong> to{" "}
@@ -340,7 +340,7 @@ export function DataTable<T extends Record<string, any>>({
               setRowsPerPage(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="bg-[#09090B] border border-[#27272A] rounded px-2 py-1 text-xs text-[#F8FAFC] focus:outline-none cursor-pointer"
+            className="bg-[#0A0A0C] border border-[#2A2A35] rounded px-2 py-1 text-xs text-[#F8FAFC] focus:outline-none cursor-pointer"
           >
             <option value={5}>5 per page</option>
             <option value={10}>10 per page</option>

@@ -18,7 +18,7 @@ export interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onChange, className = "" }) => {
   return (
-    <div className={`flex items-center gap-1 p-1 bg-[#111318] border border-[#27272A] rounded-xl w-fit ${className}`}>
+    <div className={`flex items-center gap-1 p-1 bg-[#121216] border border-[#2A2A35] rounded-xl w-fit ${className}`}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
@@ -30,17 +30,17 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onChange, className
             {isActive && (
               <motion.div
                 layoutId="activeTabPill"
-                className="absolute inset-0 bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 rounded-lg"
+                className="absolute inset-0 bg-[#E11D48]/20 border border-[#E11D48]/40 rounded-lg shadow-[0_0_12px_rgba(225,29,72,0.15)]"
                 transition={{ type: "spring", stiffness: 500, damping: 35 }}
               />
             )}
-            <span className={`relative z-10 ${isActive ? "text-[#A78BFA]" : "text-[#94A3B8] hover:text-[#F8FAFC]"}`}>
+            <span className={`relative z-10 ${isActive ? "text-[#F43F5E]" : "text-[#94A3B8] hover:text-[#F8FAFC]"}`}>
               {tab.label}
             </span>
             {tab.count !== undefined && (
               <span
                 className={`relative z-10 px-1.5 py-0.2 text-[10px] rounded-full ${
-                  isActive ? "bg-[#8B5CF6] text-white" : "bg-[#27272A] text-[#94A3B8]"
+                  isActive ? "bg-[#E11D48] text-white" : "bg-[#2A2A35] text-[#94A3B8]"
                 }`}
               >
                 {tab.count}

@@ -32,7 +32,11 @@ import {
   Eye,
   Copy,
   Trash2,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Sliders,
+  Flame,
+  ShieldCheck,
+  Bot
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -58,6 +62,7 @@ import {
   Badge,
   Input,
   Select,
+  Textarea,
   Modal,
   Tooltip,
   Tabs,
@@ -82,7 +87,7 @@ export default function HyperTuneDashboard() {
     active_training_jobs: 0
   });
 
-  // Recharts telemetry history series
+  // Recharts telemetry history series with Crimson Theme
   const [telemetryHistory, setTelemetryHistory] = useState([
     { time: "01:25", cpu: 14, gpu: 65, ram: 38, loss: 2.45 },
     { time: "01:26", cpu: 18, gpu: 72, ram: 40, loss: 2.10 },
@@ -101,7 +106,7 @@ export default function HyperTuneDashboard() {
     "[SYSTEM] Next.js Enterprise HyperTune AI Platform initialized.",
     "[STATUS] Connected to Python FastAPI backend at http://localhost:9090.",
     "[TELEMETRY] NVIDIA A100-SXM4-80GB GPU cluster initialized.",
-    "[CACHE] Redis prompt cache layer operational."
+    "[CACHE] Crimson Redis prompt cache layer operational."
   ]);
 
   // Form states
@@ -112,7 +117,10 @@ export default function HyperTuneDashboard() {
   const [learningRate, setLearningRate] = useState("0.0002");
   const [epochs, setEpochs] = useState("3");
 
-  // Evaluation & Playground state
+  // AI Model Playground Parameters
+  const [temperature, setTemperature] = useState("0.7");
+  const [topP, setTopP] = useState("0.9");
+  const [maxTokens, setMaxTokens] = useState("512");
   const [selectedEvalModelId, setSelectedEvalModelId] = useState<number>(1);
   const [evalResult, setEvalResult] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<any[]>([
@@ -246,7 +254,7 @@ export default function HyperTuneDashboard() {
       });
       if (res.ok) {
         const job = await res.json();
-        addLog(`[TRAINING] Workload #${job.id} launched successfully using ${trainMethod.toUpperCase()}`);
+        addLog(`[TRAINING] Crimson Workload #${job.id} launched successfully using ${trainMethod.toUpperCase()}`);
         refreshData();
       }
     } catch (e: any) {
@@ -312,8 +320,8 @@ export default function HyperTuneDashboard() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#09090B] text-[#F8FAFC]">
-      {/* Sidebar Component (Prompt 2 & 5) */}
+    <div className="flex min-h-screen bg-[#0A0A0C] text-[#F8FAFC]">
+      {/* Sidebar Component (Berry UI Kit + Crimson Red Theme) */}
       <Sidebar
         navItems={sidebarNavItems}
         activeTab={activeTab}
@@ -329,10 +337,10 @@ export default function HyperTuneDashboard() {
           onNewWorkload={() => setActiveTab("training")}
         />
 
-        {/* Dynamic Workspace Tab Views with Framer Motion Page Transitions */}
+        {/* Dynamic Workspace Views */}
         <div className="p-8 space-y-8 flex-1 max-w-[1600px] w-full mx-auto">
           <AnimatePresence mode="wait">
-            {/* TAB 1: DASHBOARD OVERVIEW */}
+            {/* TAB 1: OVERVIEW DASHBOARD */}
             {activeTab === "overview" && (
               <motion.div
                 key="overview"
@@ -344,14 +352,14 @@ export default function HyperTuneDashboard() {
               >
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-mono text-[#8B5CF6] uppercase tracking-wider mb-1">
-                      <Sparkles className="w-3.5 h-3.5" /> Enterprise Workspace Overview
+                    <div className="flex items-center gap-2 text-xs font-mono text-[#E11D48] uppercase tracking-wider mb-1">
+                      <Flame className="w-3.5 h-3.5 fill-[#E11D48]" /> Crimson Red AI Control Center
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-[#F8FAFC]">HyperTune Control Center</h1>
-                    <p className="text-xs text-[#94A3B8] mt-1">Real-time GPU cluster telemetry, automated training pipelines, and endpoint health.</p>
+                    <h1 className="text-2xl font-extrabold tracking-tight text-[#F8FAFC]">Enterprise Analytics & AI Engine</h1>
+                    <p className="text-xs text-[#94A3B8] mt-1">Real-time GPU cluster telemetry, automated fine-tuning pipelines, and endpoint statistics.</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge variant="success" pulse>
+                    <Badge variant="crimson" pulse>
                       Cluster Operational (4x NVIDIA A100)
                     </Badge>
                     <Button
@@ -366,30 +374,30 @@ export default function HyperTuneDashboard() {
                 </div>
 
                 {/* Quick Actions Toolbar */}
-                <Card hoverable={false} className="p-4 bg-[#111318]/70 border-[#27272A]">
+                <Card hoverable={false} className="p-4 bg-[#121216]/80 border-[#2A2A35]">
                   <div className="text-[10px] font-bold tracking-wider text-[#64748B] uppercase mb-3 flex items-center gap-1.5">
-                    <Rocket className="w-3.5 h-3.5 text-[#8B5CF6]" /> Quick Actions
+                    <Rocket className="w-3.5 h-3.5 text-[#E11D48]" /> Quick Actions
                   </div>
                   <div className="grid grid-cols-5 gap-3">
                     {[
-                      { label: "Launch Workload", desc: "SFT, LoRA & QLoRA", tab: "training", icon: Play, color: "from-[#8B5CF6] to-[#6D28D9]" },
+                      { label: "Launch Workload", desc: "SFT, LoRA & QLoRA", tab: "training", icon: Play, color: "from-[#E11D48] to-[#9F1239]" },
                       { label: "Upload Dataset", desc: "JSONL, CSV & Parquet", tab: "datasets", icon: UploadCloud, color: "from-[#2563EB] to-[#1D4ED8]" },
                       { label: "Run Benchmark", desc: "BLEU, ROUGE & PPL", tab: "evaluation", icon: CheckCircle2, color: "from-[#059669] to-[#047857]" },
                       { label: "Deploy Model", desc: "vLLM / TGI Endpoint", tab: "registry", icon: Box, color: "from-[#D97706] to-[#B45309]" },
-                      { label: "Inference Test", desc: "Live Chat Playground", tab: "playground", icon: Send, color: "from-[#7C3AED] to-[#5B21B6]" }
+                      { label: "Inference Test", desc: "Live Chat Playground", tab: "playground", icon: Send, color: "from-[#E11D48] to-[#9F1239]" }
                     ].map((action, idx) => {
                       const IconComp = action.icon;
                       return (
                         <button
                           key={idx}
                           onClick={() => setActiveTab(action.tab)}
-                          className="group p-3 rounded-xl bg-[#171A21] border border-[#27272A] hover:border-[#8B5CF6]/60 transition-all text-left flex items-start gap-3 cursor-pointer"
+                          className="group p-3 rounded-xl bg-[#18181F] border border-[#2A2A35] hover:border-[#E11D48]/60 transition-all text-left flex items-start gap-3 cursor-pointer shadow-sm"
                         >
                           <div className={`p-2 rounded-lg bg-gradient-to-tr ${action.color} text-white shadow-md group-hover:scale-105 transition-transform`}>
                             <IconComp className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-semibold text-[#F8FAFC] group-hover:text-[#A78BFA] transition-colors">{action.label}</div>
+                            <div className="text-xs font-semibold text-[#F8FAFC] group-hover:text-[#F43F5E] transition-colors">{action.label}</div>
                             <div className="text-[10px] text-[#94A3B8] mt-0.5">{action.desc}</div>
                           </div>
                         </button>
@@ -398,10 +406,10 @@ export default function HyperTuneDashboard() {
                   </div>
                 </Card>
 
-                {/* KPI Cards */}
+                {/* SaaS Analytics KPI Cards */}
                 <div className="grid grid-cols-4 gap-5">
                   {[
-                    { title: "Active Workloads", value: telemetry.active_training_jobs, sub: "Distributed PyTorch DDP", change: "+2 this hour", icon: Cpu, color: "text-[#8B5CF6]", bgGlow: "bg-[#8B5CF6]/10" },
+                    { title: "Active Workloads", value: telemetry.active_training_jobs, sub: "Distributed PyTorch DDP", change: "+14.2% vs last week", icon: Cpu, color: "text-[#E11D48]", bgGlow: "bg-[#E11D48]/10" },
                     { title: "Dataset Library", value: datasets.length, sub: "Validated Token Streams", change: "1.2M rows total", icon: Database, color: "text-[#3B82F6]", bgGlow: "bg-[#3B82F6]/10" },
                     { title: "Registered Checkpoints", value: models.length, sub: "PEFT Adapters & Weights", change: "SemVer 2.0 Ready", icon: Box, color: "text-[#10B981]", bgGlow: "bg-[#10B981]/10" },
                     { title: "Inference Endpoints", value: deployments.length, sub: "OpenAI Compatible API", change: "99.98% Uptime", icon: Zap, color: "text-[#F59E0B]", bgGlow: "bg-[#F59E0B]/10" }
@@ -416,7 +424,7 @@ export default function HyperTuneDashboard() {
                           </div>
                         </div>
                         <div className="text-3xl font-extrabold tracking-tight mt-3 text-[#F8FAFC]">{kpi.value}</div>
-                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#27272A]/60 text-[11px]">
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#2A2A35]/60 text-[11px]">
                           <span className="text-[#94A3B8]">{kpi.sub}</span>
                           <span className="text-[#22C55E] font-medium flex items-center gap-0.5">
                             <TrendingUp className="w-3 h-3" /> {kpi.change}
@@ -427,18 +435,18 @@ export default function HyperTuneDashboard() {
                   })}
                 </div>
 
-                {/* Telemetry Charts */}
+                {/* Recharts Crimson Telemetry Charts */}
                 <div className="grid grid-cols-3 gap-6">
                   <Card hoverable={false} className="col-span-2">
                     <CardHeader>
                       <div>
-                        <CardTitle icon={<Activity className="w-4 h-4" />}>
+                        <CardTitle icon={<Activity className="w-4 h-4 text-[#E11D48]" />}>
                           Cluster Resource Utilization Over Time
                         </CardTitle>
-                        <CardDescription>Real-time GPU VRAM, CPU, and RAM allocation telemetry stream</CardDescription>
+                        <CardDescription>Real-time Crimson GPU VRAM, CPU, and RAM allocation telemetry stream</CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="purple" dot={false}>GPU (88%)</Badge>
+                        <Badge variant="crimson" dot={false}>GPU (88%)</Badge>
                         <Badge variant="neutral" dot={false}>CPU (25%)</Badge>
                       </div>
                     </CardHeader>
@@ -446,22 +454,22 @@ export default function HyperTuneDashboard() {
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={telemetryHistory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                           <defs>
-                            <linearGradient id="gpuGrad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.4} />
-                              <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
+                            <linearGradient id="crimsonGpuGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#E11D48" stopOpacity={0.45} />
+                              <stop offset="95%" stopColor="#E11D48" stopOpacity={0} />
                             </linearGradient>
                             <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
                               <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
                             </linearGradient>
                           </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#2A2A35" vertical={false} />
                           <XAxis dataKey="time" stroke="#64748B" fontSize={10} tickLine={false} />
                           <YAxis stroke="#64748B" fontSize={10} tickLine={false} domain={[0, 100]} />
                           <RechartsTooltip
-                            contentStyle={{ backgroundColor: "#111318", borderColor: "#27272A", borderRadius: "8px", fontSize: "12px" }}
+                            contentStyle={{ backgroundColor: "#121216", borderColor: "#2A2A35", borderRadius: "8px", fontSize: "12px" }}
                           />
-                          <Area type="monotone" dataKey="gpu" stroke="#8B5CF6" strokeWidth={2} fillOpacity={1} fill="url(#gpuGrad)" name="GPU %" />
+                          <Area type="monotone" dataKey="gpu" stroke="#E11D48" strokeWidth={2.5} fillOpacity={1} fill="url(#crimsonGpuGrad)" name="GPU %" />
                           <Area type="monotone" dataKey="cpu" stroke="#22C55E" strokeWidth={2} fillOpacity={1} fill="url(#cpuGrad)" name="CPU %" />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -471,7 +479,7 @@ export default function HyperTuneDashboard() {
                   <Card hoverable={false}>
                     <CardHeader>
                       <div>
-                        <CardTitle icon={<TrendingUp className="w-4 h-4" />}>
+                        <CardTitle icon={<TrendingUp className="w-4 h-4 text-[#E11D48]" />}>
                           Training Loss Curve
                         </CardTitle>
                         <CardDescription>Cross-entropy loss evaluation</CardDescription>
@@ -481,20 +489,20 @@ export default function HyperTuneDashboard() {
                     <CardContent className="h-64 pt-2">
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={telemetryHistory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#27272A" vertical={false} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#2A2A35" vertical={false} />
                           <XAxis dataKey="time" stroke="#64748B" fontSize={10} tickLine={false} />
                           <YAxis stroke="#64748B" fontSize={10} tickLine={false} domain={[0, 3]} />
                           <RechartsTooltip
-                            contentStyle={{ backgroundColor: "#111318", borderColor: "#27272A", borderRadius: "8px", fontSize: "12px" }}
+                            contentStyle={{ backgroundColor: "#121216", borderColor: "#2A2A35", borderRadius: "8px", fontSize: "12px" }}
                           />
-                          <Line type="monotone" dataKey="loss" stroke="#A78BFA" strokeWidth={2.5} dot={{ r: 3, fill: "#8B5CF6" }} name="Loss" />
+                          <Line type="monotone" dataKey="loss" stroke="#F43F5E" strokeWidth={2.5} dot={{ r: 3.5, fill: "#E11D48" }} name="Loss" />
                         </LineChart>
                       </ResponsiveContainer>
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Hardware Gauges & Interactive Workload Table (Prompt 4 DataTable) */}
+                {/* Hardware Gauges & Interactive Workload DataTable */}
                 <div className="grid grid-cols-3 gap-6">
                   <Card hoverable={false} className="col-span-1">
                     <CardHeader>
@@ -504,15 +512,15 @@ export default function HyperTuneDashboard() {
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs">
                           <span className="text-[#94A3B8] font-medium flex items-center gap-1.5">
-                            <Cpu className="w-3.5 h-3.5 text-[#8B5CF6]" /> NVIDIA A100 GPU VRAM
+                            <Cpu className="w-3.5 h-3.5 text-[#E11D48]" /> NVIDIA A100 GPU VRAM
                           </span>
                           <span className="font-mono font-bold text-[#F8FAFC]">
                             {(telemetry.vram_used_mb / 1024).toFixed(1)} / 16.0 GB
                           </span>
                         </div>
-                        <div className="h-2.5 bg-[#09090B] border border-[#27272A] rounded-full overflow-hidden p-0.5">
+                        <div className="h-2.5 bg-[#0A0A0C] border border-[#2A2A35] rounded-full overflow-hidden p-0.5">
                           <div
-                            className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#A78BFA] rounded-full transition-all duration-500 shadow-[0_0_12px_#8B5CF6]"
+                            className="h-full bg-gradient-to-r from-[#E11D48] to-[#F43F5E] rounded-full transition-all duration-500 shadow-[0_0_12px_#E11D48]"
                             style={{ width: `${(telemetry.vram_used_mb / 16384) * 100}%` }}
                           />
                         </div>
@@ -522,14 +530,14 @@ export default function HyperTuneDashboard() {
                         </div>
                       </div>
 
-                      <div className="space-y-2 pt-2 border-t border-[#27272A]/50">
+                      <div className="space-y-2 pt-2 border-t border-[#2A2A35]/50">
                         <div className="flex justify-between text-xs">
                           <span className="text-[#94A3B8] font-medium flex items-center gap-1.5">
                             <HardDrive className="w-3.5 h-3.5 text-[#22C55E]" /> Host CPU Utilization
                           </span>
                           <span className="font-mono font-bold text-[#F8FAFC]">{telemetry.cpu_percent}%</span>
                         </div>
-                        <div className="h-2.5 bg-[#09090B] border border-[#27272A] rounded-full overflow-hidden p-0.5">
+                        <div className="h-2.5 bg-[#0A0A0C] border border-[#2A2A35] rounded-full overflow-hidden p-0.5">
                           <div
                             className="h-full bg-gradient-to-r from-[#16a34a] to-[#22C55E] rounded-full transition-all duration-500"
                             style={{ width: `${telemetry.cpu_percent}%` }}
@@ -549,7 +557,7 @@ export default function HyperTuneDashboard() {
                       columns={[
                         { key: "name", label: "Workload Name", sortable: true, render: (j) => <span className="font-semibold">{j.name}</span> },
                         { key: "base_model", label: "Base Model", sortable: true, render: (j) => <span className="font-mono text-[11px] text-[#94A3B8]">{j.base_model || baseModel}</span> },
-                        { key: "method", label: "Method", sortable: true, render: (j) => <Badge variant="purple" dot={false}>{(j.method || "qlora").toUpperCase()}</Badge> },
+                        { key: "method", label: "Method", sortable: true, render: (j) => <Badge variant="crimson" dot={false}>{(j.method || "qlora").toUpperCase()}</Badge> },
                         { key: "status", label: "Status", sortable: true, render: (j) => <Badge variant="success">{j.status || "COMPLETED"}</Badge> }
                       ]}
                       rowActions={(j) => [
@@ -562,7 +570,7 @@ export default function HyperTuneDashboard() {
               </motion.div>
             )}
 
-            {/* TAB 2: DATASETS (Prompt 4 DataTable integration) */}
+            {/* TAB 2: DATASETS */}
             {activeTab === "datasets" && (
               <motion.div
                 key="datasets"
@@ -579,8 +587,8 @@ export default function HyperTuneDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-[#171A21] border-2 border-dashed border-[#27272A] hover:border-[#8B5CF6] p-8 rounded-xl text-center space-y-3 cursor-pointer transition-all">
-                  <div className="w-12 h-12 rounded-full bg-[#8B5CF6]/15 text-[#A78BFA] flex items-center justify-center mx-auto">
+                <div className="bg-[#18181F] border-2 border-dashed border-[#2A2A35] hover:border-[#E11D48] p-8 rounded-xl text-center space-y-3 cursor-pointer transition-all">
+                  <div className="w-12 h-12 rounded-full bg-[#E11D48]/15 text-[#F43F5E] flex items-center justify-center mx-auto">
                     <UploadCloud className="w-6 h-6" />
                   </div>
                   <div className="font-semibold text-sm">Drag & drop dataset files here</div>
@@ -603,7 +611,7 @@ export default function HyperTuneDashboard() {
                   columns={[
                     { key: "id", label: "ID", sortable: true, render: (d) => <span className="font-mono">#{d.id}</span> },
                     { key: "name", label: "Dataset Name", sortable: true, render: (d) => <span className="font-semibold">{d.name}</span> },
-                    { key: "file_type", label: "Format", sortable: true, render: (d) => <Badge variant="purple" dot={false}>{d.file_type}</Badge> },
+                    { key: "file_type", label: "Format", sortable: true, render: (d) => <Badge variant="crimson" dot={false}>{d.file_type}</Badge> },
                     { key: "sample_count", label: "Sample Count", sortable: true, render: (d) => <span>{d.sample_count?.toLocaleString()}</span> },
                     { key: "size_bytes", label: "File Size", sortable: true, render: (d) => <span>{(d.size_bytes / 1024).toFixed(1)} KB</span> },
                     { key: "status", label: "Validation", sortable: true, render: (d) => <Badge variant="success">{d.status}</Badge> }
@@ -616,7 +624,7 @@ export default function HyperTuneDashboard() {
               </motion.div>
             )}
 
-            {/* TAB 3: TRAINING STUDIO */}
+            {/* TAB 3: TRAINING STUDIO (AI-specific controls) */}
             {activeTab === "training" && (
               <motion.div
                 key="training"
@@ -628,7 +636,7 @@ export default function HyperTuneDashboard() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-xl font-bold tracking-tight">Training Studio</h1>
+                    <h1 className="text-xl font-bold tracking-tight">AI Training Studio</h1>
                     <p className="text-xs text-[#94A3B8] mt-1">Configure and launch SFT, LoRA, QLoRA (4-bit NF4), or DPO fine-tuning workloads.</p>
                   </div>
                 </div>
@@ -636,7 +644,7 @@ export default function HyperTuneDashboard() {
                 <div className="grid grid-cols-2 gap-6">
                   <Card hoverable={false}>
                     <CardHeader>
-                      <CardTitle icon={<Cpu className="w-4 h-4" />}>Workload Configuration</CardTitle>
+                      <CardTitle icon={<Cpu className="w-4 h-4 text-[#E11D48]" />}>Workload Configuration</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <form onSubmit={handleLaunchTraining} className="space-y-4">
@@ -704,11 +712,11 @@ export default function HyperTuneDashboard() {
 
                   <Card hoverable={false}>
                     <CardHeader>
-                      <CardTitle icon={<Terminal className="w-4 h-4" />}>Live Training Logs & Stream</CardTitle>
-                      <Badge variant="purple" pulse>Telemetry Active</Badge>
+                      <CardTitle icon={<Terminal className="w-4 h-4 text-[#E11D48]" />}>Live Training Logs & Stream</CardTitle>
+                      <Badge variant="crimson" pulse>Telemetry Active</Badge>
                     </CardHeader>
                     <CardContent>
-                      <div className="h-64 bg-[#050608] border border-[#27272A] rounded-lg p-3 font-mono text-[11px] text-[#A78BFA] overflow-y-auto space-y-1">
+                      <div className="h-64 bg-[#0A0A0C] border border-[#2A2A35] rounded-lg p-3 font-mono text-[11px] text-[#F43F5E] overflow-y-auto space-y-1">
                         {logs.map((l, i) => (
                           <div key={i}>{l}</div>
                         ))}
@@ -731,7 +739,7 @@ export default function HyperTuneDashboard() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-xl font-bold tracking-tight">Evaluation Studio</h1>
+                    <h1 className="text-xl font-bold tracking-tight">AI Evaluation Studio</h1>
                     <p className="text-xs text-[#94A3B8] mt-1">Calculate Perplexity, BLEU-4, ROUGE scores, and inspect side-by-side prompt responses.</p>
                   </div>
                 </div>
@@ -780,7 +788,7 @@ export default function HyperTuneDashboard() {
               </motion.div>
             )}
 
-            {/* TAB 5: MODEL REGISTRY (Prompt 4 DataTable integration) */}
+            {/* TAB 5: MODEL REGISTRY */}
             {activeTab === "registry" && (
               <motion.div
                 key="registry"
@@ -792,7 +800,7 @@ export default function HyperTuneDashboard() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-xl font-bold tracking-tight">Model Registry</h1>
+                    <h1 className="text-xl font-bold tracking-tight">AI Model Registry</h1>
                     <p className="text-xs text-[#94A3B8] mt-1">Manage versioned model artifacts, merge PEFT adapters, and deploy active endpoints.</p>
                   </div>
                 </div>
@@ -805,7 +813,7 @@ export default function HyperTuneDashboard() {
                   columns={[
                     { key: "id", label: "ID", sortable: true, render: (m) => <span className="font-mono">#{m.id}</span> },
                     { key: "name", label: "Model Name", sortable: true, render: (m) => <span className="font-semibold">{m.name}</span> },
-                    { key: "version", label: "Version", sortable: true, render: (m) => <Badge variant="purple" dot={false}>{m.version}</Badge> },
+                    { key: "version", label: "Version", sortable: true, render: (m) => <Badge variant="crimson" dot={false}>{m.version}</Badge> },
                     { key: "base_model", label: "Base Foundation Model", sortable: true, render: (m) => <span className="font-mono text-[11px] text-[#94A3B8]">{m.base_model}</span> },
                     { key: "status", label: "Deployment Status", sortable: true, render: (m) => <Badge variant="success">{m.status}</Badge> }
                   ]}
@@ -817,7 +825,7 @@ export default function HyperTuneDashboard() {
               </motion.div>
             )}
 
-            {/* TAB 6: INFERENCE PLAYGROUND */}
+            {/* TAB 6: INFERENCE PLAYGROUND (AI Specific Parameters) */}
             {activeTab === "playground" && (
               <motion.div
                 key="playground"
@@ -829,32 +837,35 @@ export default function HyperTuneDashboard() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-xl font-bold tracking-tight">Inference Playground</h1>
+                    <h1 className="text-xl font-bold tracking-tight">AI Inference Playground</h1>
                     <p className="text-xs text-[#94A3B8] mt-1">Test fine-tuned model endpoints live with OpenAI-compatible API completion integration.</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6 h-[520px]">
+                <div className="grid grid-cols-3 gap-6 h-[560px]">
                   <Card className="col-span-2 flex flex-col p-0 overflow-hidden" hoverable={false}>
-                    <div className="p-4 border-b border-[#27272A] flex justify-between items-center bg-[#111318]">
-                      <span className="text-xs font-semibold">{baseModel}</span>
-                      <Badge variant="success" pulse>Endpoint Online</Badge>
+                    <div className="p-4 border-b border-[#2A2A35] flex justify-between items-center bg-[#121216]">
+                      <div className="flex items-center gap-2">
+                        <Bot className="w-4 h-4 text-[#E11D48]" />
+                        <span className="text-xs font-bold text-[#F8FAFC]">{baseModel}</span>
+                      </div>
+                      <Badge variant="crimson" pulse>Endpoint Online</Badge>
                     </div>
 
                     <div className="flex-1 p-4 overflow-y-auto space-y-3">
                       {chatMessages.map((msg, idx) => (
                         <div key={idx} className={`flex gap-3 text-xs max-w-[85%] ${msg.role === "user" ? "ml-auto flex-row-reverse" : ""}`}>
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[10px] ${msg.role === "user" ? "bg-[#1F2530] text-[#F8FAFC]" : "bg-[#8B5CF6] text-white"}`}>
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[10px] ${msg.role === "user" ? "bg-[#22222B] text-[#F8FAFC]" : "bg-[#E11D48] text-white shadow-[0_0_10px_#E11D48]"}`}>
                             {msg.role === "user" ? "U" : "AI"}
                           </div>
-                          <div className={`p-3 rounded-xl border ${msg.role === "user" ? "bg-[#8B5CF6]/15 border-[#8B5CF6]/30 text-[#F8FAFC]" : "bg-[#111318] border-[#27272A] text-[#94A3B8]"}`}>
+                          <div className={`p-3.5 rounded-xl border ${msg.role === "user" ? "bg-[#E11D48]/15 border-[#E11D48]/30 text-[#F8FAFC]" : "bg-[#121216] border-[#2A2A35] text-[#94A3B8]"}`}>
                             {msg.content}
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="p-3 border-t border-[#27272A] bg-[#111318] flex gap-2">
+                    <div className="p-3 border-t border-[#2A2A35] bg-[#121216] flex gap-2">
                       <Input
                         value={chatInput}
                         onChange={(e) => setChatInput(e.target.value)}
@@ -866,19 +877,72 @@ export default function HyperTuneDashboard() {
                     </div>
                   </Card>
 
-                  <Card hoverable={false}>
+                  <Card hoverable={false} className="space-y-4 overflow-y-auto">
                     <CardHeader>
-                      <CardTitle icon={<Terminal className="w-4 h-4" />}>OpenAI Integration Snippet</CardTitle>
+                      <CardTitle icon={<Sliders className="w-4 h-4 text-[#E11D48]" />}>AI Hyperparameters</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <pre className="text-[11px] font-mono bg-[#050608] p-3 rounded-lg text-[#A78BFA] overflow-x-auto border border-[#27272A]">
-                        {`curl http://localhost:9090/v1/chat/completions \\
+                    <CardContent className="space-y-4">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-[#94A3B8]">Temperature</span>
+                          <span className="font-mono font-bold text-[#F43F5E]">{temperature}</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.0"
+                          max="1.5"
+                          step="0.05"
+                          value={temperature}
+                          onChange={(e) => setTemperature(e.target.value)}
+                          className="w-full accent-[#E11D48] cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-[#94A3B8]">Top-P Sampling</span>
+                          <span className="font-mono font-bold text-[#F43F5E]">{topP}</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.1"
+                          max="1.0"
+                          step="0.05"
+                          value={topP}
+                          onChange={(e) => setTopP(e.target.value)}
+                          className="w-full accent-[#E11D48] cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-[#94A3B8]">Max Tokens</span>
+                          <span className="font-mono font-bold text-[#F43F5E]">{maxTokens}</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="64"
+                          max="2048"
+                          step="64"
+                          value={maxTokens}
+                          onChange={(e) => setMaxTokens(e.target.value)}
+                          className="w-full accent-[#E11D48] cursor-pointer"
+                        />
+                      </div>
+
+                      <div className="pt-2 border-t border-[#2A2A35]">
+                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-2">OpenAI API Request</div>
+                        <pre className="text-[11px] font-mono bg-[#0A0A0C] p-3 rounded-lg text-[#F43F5E] overflow-x-auto border border-[#2A2A35]">
+                          {`curl http://localhost:9090/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -d '{
     "model": "${baseModel}",
+    "temperature": ${temperature},
+    "max_tokens": ${maxTokens},
     "messages": [{"role": "user", "content": "Hello!"}]
   }'`}
-                      </pre>
+                        </pre>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -904,10 +968,10 @@ export default function HyperTuneDashboard() {
 
                 <Card hoverable={false}>
                   <CardHeader>
-                    <CardTitle icon={<Activity className="w-4 h-4" />}>Live System Log Output</CardTitle>
+                    <CardTitle icon={<Activity className="w-4 h-4 text-[#E11D48]" />}>Live System Log Output</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-80 bg-[#050608] border border-[#27272A] rounded-lg p-4 font-mono text-xs text-[#A78BFA] overflow-y-auto space-y-1.5">
+                    <div className="h-80 bg-[#0A0A0C] border border-[#2A2A35] rounded-lg p-4 font-mono text-xs text-[#F43F5E] overflow-y-auto space-y-1.5">
                       {logs.map((l, i) => (
                         <div key={i}>{l}</div>
                       ))}
@@ -947,10 +1011,10 @@ export default function HyperTuneDashboard() {
                     setActiveTab(cmd.id);
                     setCmdKOpen(false);
                   }}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-[#94A3B8] hover:bg-[#171A21] hover:text-[#F8FAFC] cursor-pointer transition-colors"
+                  className="flex items-center justify-between px-3 py-2.5 rounded-lg text-xs text-[#94A3B8] hover:bg-[#18181F] hover:text-[#F8FAFC] cursor-pointer transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
-                    <Command className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                    <Command className="w-3.5 h-3.5 text-[#E11D48]" />
                     <span>Go to {cmd.label}</span>
                   </div>
                   <span className="text-[10px] font-mono text-[#64748B]">Jump</span>
