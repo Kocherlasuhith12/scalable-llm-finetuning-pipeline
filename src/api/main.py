@@ -76,6 +76,11 @@ app.include_router(websockets_router)
 # Mount Static Dashboard UI
 static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 os.makedirs(static_dir, exist_ok=True)
+
+_next_dir = os.path.join(static_dir, "_next")
+if os.path.exists(_next_dir):
+    app.mount("/_next", StaticFiles(directory=_next_dir), name="next")
+
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
