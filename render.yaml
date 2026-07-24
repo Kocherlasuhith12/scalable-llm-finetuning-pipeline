@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: enterprise-llm-finetuning-platform
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn src.api.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        value: "sqlite:///./platform.db"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: "production"
+      - key: ALLOW_MOCK_TRAINING
+        value: "true"

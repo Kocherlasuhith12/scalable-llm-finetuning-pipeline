@@ -3,8 +3,14 @@
 import math
 from typing import Any, Optional
 
-import torch
-from torch.utils.data import DataLoader
+try:
+    import torch
+    from torch.utils.data import DataLoader
+    _TORCH_AVAILABLE = True
+except ImportError:
+    _TORCH_AVAILABLE = False
+    torch = None
+    DataLoader = Any
 
 
 def compute_perplexity(

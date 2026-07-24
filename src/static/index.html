@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HyperTune AI — Enterprise LLM Platform</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="workspace-selector" onclick="toggleWorkspaceDropdown()">
+                <div class="workspace-info">
+                    <div class="workspace-avatar">H</div>
+                    <div class="workspace-details">
+                        <span class="workspace-name">Acme Production</span>
+                        <span class="workspace-plan">Enterprise Tier</span>
+                    </div>
+                </div>
+                <i data-lucide="chevrons-up-down" style="width: 16px; color: var(--text-muted);"></i>
+            </div>
+
+            <nav class="nav-menu">
+                <span class="nav-section-label">Platform</span>
+                <button class="nav-item active" data-tab="overview">
+                    <div class="nav-item-content">
+                        <i data-lucide="layout-grid"></i>
+                        <span>Overview</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="datasets">
+                    <div class="nav-item-content">
+                        <i data-lucide="database"></i>
+                        <span>Datasets</span>
+                    </div>
+                    <span class="nav-badge" id="sidebar-dataset-badge">0</span>
+                </button>
+                <button class="nav-item" data-tab="training">
+                    <div class="nav-item-content">
+                        <i data-lucide="cpu"></i>
+                        <span>Training Studio</span>
+                    </div>
+                    <span class="nav-badge" id="sidebar-active-jobs-badge">0</span>
+                </button>
+
+                <span class="nav-section-label" style="margin-top: 1rem;">Deploy & Evaluate</span>
+                <button class="nav-item" data-tab="evaluation">
+                    <div class="nav-item-content">
+                        <i data-lucide="target"></i>
+                        <span>Evaluation</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="registry">
+                    <div class="nav-item-content">
+                        <i data-lucide="box"></i>
+                        <span>Model Registry</span>
+                    </div>
+                    <span class="nav-badge" id="sidebar-models-badge">0</span>
+                </button>
+                <button class="nav-item" data-tab="playground">
+                    <div class="nav-item-content">
+                        <i data-lucide="terminal"></i>
+                        <span>Playground</span>
+                    </div>
+                </button>
+                <button class="nav-item" data-tab="monitoring">
+                    <div class="nav-item-content">
+                        <i data-lucide="activity"></i>
+                        <span>Monitoring</span>
+                    </div>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="user-button">
+                    <div class="user-profile-info">
+                        <div class="user-avatar">A</div>
+                        <div class="user-text">
+                            <span class="user-name">Admin Account</span>
+                            <span class="user-email">admin@enterprise.ai</span>
+                        </div>
+                    </div>
+                    <i data-lucide="more-vertical" style="width: 16px; color: var(--text-muted);"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content View -->
+        <main class="main-content">
+            <!-- Top Sticky Header Bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="breadcrumbs">
+                        <span class="breadcrumb-item">HyperTune AI</span>
+                        <i data-lucide="chevron-right" style="width: 14px;"></i>
+                        <span class="breadcrumb-item active" id="breadcrumb-current-page">Overview</span>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="cmd-k-trigger" onclick="openCommandPalette()">
+                        <i data-lucide="search" style="width: 16px;"></i>
+                        <span>Search platform...</span>
+                        <span class="kbd-shortcut">⌘K</span>
+                    </button>
+
+                    <button class="icon-btn" onclick="toggleNotificationsDrawer()" title="Notifications">
+                        <i data-lucide="bell" style="width: 18px;"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <button class="btn btn-primary btn-sm" onclick="quickLaunchJob()">
+                        <i data-lucide="plus" style="width: 14px;"></i>
+                        <span>Launch Job</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- MODULE 1: OVERVIEW DASHBOARD -->
+            <section id="view-overview" class="page-view active">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Platform Overview</h1>
+                        <p>Real-time cluster telemetry, active workloads, and operational health.</p>
+                    </div>
+                    <div class="status-tag success">
+                        <span class="status-dot"></span>
+                        <span>Cluster Operational</span>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-label">Active Training Jobs</span>
+                            <div class="kpi-icon"><i data-lucide="cpu" style="width: 18px;"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-active-jobs">0</div>
+                        <div class="kpi-trend positive"><i data-lucide="trending-up" style="width: 14px;"></i> <span>Real-time worker pool active</span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-label">Uploaded Datasets</span>
+                            <div class="kpi-icon"><i data-lucide="database" style="width: 18px;"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-datasets-count">0</div>
+                        <div class="kpi-trend neutral"><span>JSONL, CSV, Parquet</span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-label">Registered Models</span>
+                            <div class="kpi-icon"><i data-lucide="box" style="width: 18px;"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-models-count">0</div>
+                        <div class="kpi-trend positive"><span>v1.0 Versioned</span></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-label">Inference Endpoints</span>
+                            <div class="kpi-icon"><i data-lucide="zap" style="width: 18px;"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-deployments-count">0</div>
+                        <div class="kpi-trend positive"><i data-lucide="check" style="width: 14px;"></i> <span>OpenAI Compatible</span></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i data-lucide="activity"></i> Cluster Telemetry Gauges</span>
+                            <span class="status-tag success">Live Stream</span>
+                        </div>
+                        <div class="telemetry-list">
+                            <div class="telemetry-item">
+                                <div class="telemetry-header">
+                                    <span class="telemetry-name">CPU Allocation</span>
+                                    <span class="telemetry-val" id="gauge-cpu-text">18.5%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar-fill" id="gauge-cpu-bar" style="width: 18.5%;"></div>
+                                </div>
+                            </div>
+                            <div class="telemetry-item">
+                                <div class="telemetry-header">
+                                    <span class="telemetry-name">RAM Utilization</span>
+                                    <span class="telemetry-val" id="gauge-ram-text">42.0%</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar-fill emerald" id="gauge-ram-bar" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                            <div class="telemetry-item">
+                                <div class="telemetry-header">
+                                    <span class="telemetry-name">GPU VRAM Memory</span>
+                                    <span class="telemetry-val" id="gauge-vram-text">6.4 GB / 16.0 GB</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar-fill amber" id="gauge-vram-bar" style="width: 40%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i data-lucide="clock"></i> Recent Training Workloads</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="table-recent-jobs">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="3" class="text-muted">Loading active jobs...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 2: DATASET MANAGER -->
+            <section id="view-datasets" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Dataset Manager</h1>
+                        <p>Upload, validate, inspect token metrics, and run MinHash LSH deduplication.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('dataset-upload-input').click()">
+                        <i data-lucide="upload" style="width: 16px;"></i>
+                        <span>Upload Dataset</span>
+                    </button>
+                    <input type="file" id="dataset-upload-input" style="display: none;" accept=".jsonl,.json,.csv,.parquet" onchange="handleFileUpload(event)">
+                </div>
+
+                <div class="card">
+                    <div class="upload-dropzone" id="dataset-dropzone">
+                        <div class="upload-icon-box">
+                            <i data-lucide="file-text" style="width: 28px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem; font-weight: 600;">Drag & drop dataset files here</h3>
+                            <p class="text-muted mt-2">Supports `.jsonl`, `.csv`, and `.parquet` format for SFT and DPO preference training.</p>
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <span class="status-tag success">Automated Syntax Validation</span>
+                            <span class="status-tag processing">MinHash LSH Deduplication</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-6">
+                    <div class="card-header">
+                        <span class="card-title"><i data-lucide="database"></i> Workspace Datasets</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="table-datasets">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Dataset Name</th>
+                                    <th>Format</th>
+                                    <th>Samples</th>
+                                    <th>Size</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="7" class="text-muted">Loading workspace datasets...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 3: TRAINING STUDIO -->
+            <section id="view-training" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Training Studio</h1>
+                        <p>Orchestrate LoRA, QLoRA, SFT, and DPO fine-tuning jobs with real-time loss tracking.</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- Training Config Wizard Form -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i data-lucide="sliders"></i> Job Configuration</span>
+                        </div>
+                        <form id="form-training-launch" onsubmit="handleLaunchTrainingForm(event)">
+                            <div class="form-group">
+                                <label class="form-label">Job Identifier Name</label>
+                                <input type="text" id="input-job-name" class="form-control" placeholder="e.g. llama3-customer-support-v1" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Base Foundation Model</label>
+                                <select id="select-base-model" class="form-select">
+                                    <option value="meta-llama/Llama-3.2-1B">meta-llama/Llama-3.2-1B</option>
+                                    <option value="mistralai/Mistral-7B-v0.1">mistralai/Mistral-7B-v0.1</option>
+                                    <option value="Qwen/Qwen2.5-1.5B">Qwen/Qwen2.5-1.5B</option>
+                                    <option value="google/gemma-2b">google/gemma-2b</option>
+                                </select>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Training Dataset</label>
+                                    <select id="select-train-dataset" class="form-select" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Fine-Tuning Method</label>
+                                    <select id="select-train-method" class="form-select">
+                                        <option value="qlora">QLoRA (4-bit NF4 Quantized)</option>
+                                        <option value="lora">LoRA (Low-Rank Adaptation)</option>
+                                        <option value="sft">Supervised Fine-Tuning (SFT)</option>
+                                        <option value="dpo">DPO (Direct Preference Optimization)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Learning Rate</label>
+                                    <input type="number" id="input-lr" class="form-control" step="0.00001" value="0.0002">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Epochs</label>
+                                    <input type="number" id="input-epochs" class="form-control" value="3">
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">LoRA Rank (r)</label>
+                                    <input type="number" id="input-lora-r" class="form-control" value="16">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">LoRA Alpha</label>
+                                    <input type="number" id="input-lora-alpha" class="form-control" value="32">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-4">
+                                <i data-lucide="play" style="width: 16px;"></i>
+                                <span>Launch Fine-Tuning Workload</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Real-Time Training Telemetry -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i data-lucide="line-chart"></i> Real-Time Loss & Telemetry Stream</span>
+                            <span class="status-tag processing" id="training-active-tag">Idle</span>
+                        </div>
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="chart-training-loss"></canvas>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-muted" id="text-training-step">Step: 0 / 0</span>
+                                <span class="text-mono" id="text-training-loss" style="color: var(--accent-purple-light); font-weight: 600;">Loss: --</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-bar-fill" id="bar-training-progress" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 4: EVALUATION BENCHMARK STUDIO -->
+            <section id="view-evaluation" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Evaluation Studio</h1>
+                        <p>Calculate Perplexity, BLEU-4, ROUGE scores, and inspect side-by-side prompt responses.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"><i data-lucide="play-circle"></i> Run Model Evaluation Benchmark</span>
+                    </div>
+                    <div class="flex gap-4 items-center">
+                        <div style="flex: 1;">
+                            <label class="form-label">Target Model Checkpoint</label>
+                            <select id="select-eval-model" class="form-select"></select>
+                        </div>
+                        <div style="margin-top: 1.25rem;">
+                            <button class="btn btn-primary" onclick="handleRunEvaluation()">
+                                <i data-lucide="bar-chart-2" style="width: 16px;"></i>
+                                <span>Execute Evaluation Benchmark</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-grid mt-6">
+                    <div class="kpi-card">
+                        <span class="kpi-label">Perplexity (PPL)</span>
+                        <div class="kpi-value" id="val-eval-ppl">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">BLEU-4 Score</span>
+                        <div class="kpi-value" id="val-eval-bleu">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">ROUGE-L Score</span>
+                        <div class="kpi-value" id="val-eval-rouge">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Exact Match (EM)</span>
+                        <div class="kpi-value" id="val-eval-em">--</div>
+                    </div>
+                </div>
+
+                <div class="card mt-6">
+                    <div class="card-header">
+                        <span class="card-title"><i data-lucide="columns"></i> Side-by-Side Prompt Generation Inspector</span>
+                    </div>
+                    <div id="eval-samples-container">
+                        <p class="text-muted text-center" style="padding: 2rem;">Run an evaluation job to view model comparisons.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 5: MODEL REGISTRY -->
+            <section id="view-registry" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Model Registry</h1>
+                        <p>Manage model versions, merge PEFT adapters, and deploy active inference endpoints.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"><i data-lucide="box"></i> Registered Model Checkpoints</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="table-models">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Model Name</th>
+                                    <th>Version</th>
+                                    <th>Base Model</th>
+                                    <th>Quantization</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="7" class="text-muted">Loading registered models...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 6: INFERENCE PLAYGROUND -->
+            <section id="view-playground" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Inference Playground</h1>
+                        <p>Test fine-tuned endpoints live with OpenAI-compatible API completion integration.</p>
+                    </div>
+                </div>
+
+                <div class="playground-container">
+                    <!-- Chat Interactive Window -->
+                    <div class="chat-panel">
+                        <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+                            <select id="select-playground-endpoint" class="form-select" style="width: auto; font-weight: 600;"></select>
+                            <span class="status-tag success"><span class="status-dot"></span> Online</span>
+                        </div>
+                        <div class="chat-messages" id="chat-messages-list">
+                            <div class="chat-bubble assistant">
+                                <div class="chat-avatar">AI</div>
+                                <div class="chat-content">
+                                    Hello! I am your fine-tuned enterprise LLM assistant. Ask me a prompt to test inference.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-bar">
+                            <input type="text" id="input-chat-prompt" class="form-control" placeholder="Type prompt here... (e.g. Explain QLoRA benefits)" onkeydown="if(event.key==='Enter') sendPlaygroundMessage()">
+                            <button class="btn btn-primary" onclick="sendPlaygroundMessage()">
+                                <i data-lucide="send" style="width: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Parameters & Code Exporter -->
+                    <div class="flex-col gap-4">
+                        <div class="card">
+                            <span class="card-title mb-3"><i data-lucide="sliders"></i> Parameters</span>
+                            <div class="form-group mt-2">
+                                <label class="form-label">Temperature: <span id="val-temp">0.7</span></label>
+                                <input type="range" id="slider-temp" min="0" max="1" step="0.05" value="0.7" oninput="document.getElementById('val-temp').textContent=this.value">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Max Tokens: 256</label>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <span class="card-title mb-3"><i data-lucide="code"></i> Integration Snippet</span>
+                            <pre class="text-mono" style="font-size: 0.75rem; background: #050608; padding: 0.85rem; border-radius: 8px; overflow-x: auto; color: #a78bfa;">curl http://localhost:9090/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Llama-3.2-1B",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 7: SYSTEM MONITORING -->
+            <section id="view-monitoring" class="page-view">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>System Monitoring & Analytics</h1>
+                        <p>Grafana-style telemetry, cost breakdowns, and live log stream filter.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"><i data-lucide="terminal"></i> Live Execution Log Terminal</span>
+                    </div>
+                    <div class="log-terminal" id="log-terminal-output">
+                        <div class="log-entry info">[SYSTEM] HyperTune AI Platform initialized.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Command Palette Overlay Modal (Raycast / Linear style) -->
+    <div class="cmd-k-overlay" id="cmd-k-overlay" onclick="if(event.target===this) closeCommandPalette()">
+        <div class="cmd-k-modal">
+            <div class="cmd-k-input-wrapper">
+                <i data-lucide="search" style="width: 20px; color: var(--text-muted);"></i>
+                <input type="text" id="cmd-k-input" class="cmd-k-input" placeholder="Type a command or search..." onkeyup="filterCommandPalette(event)">
+                <span class="kbd-shortcut">ESC</span>
+            </div>
+            <div class="cmd-k-results" id="cmd-k-results-list">
+                <div class="cmd-k-item" onclick="executeCommand('overview')">
+                    <div class="flex items-center"><i data-lucide="layout-grid"></i> Go to Overview Dashboard</div>
+                    <span class="kbd-shortcut">Jump</span>
+                </div>
+                <div class="cmd-k-item" onclick="executeCommand('datasets')">
+                    <div class="flex items-center"><i data-lucide="database"></i> Manage Datasets</div>
+                    <span class="kbd-shortcut">Jump</span>
+                </div>
+                <div class="cmd-k-item" onclick="executeCommand('training')">
+                    <div class="flex items-center"><i data-lucide="cpu"></i> Launch Training Studio</div>
+                    <span class="kbd-shortcut">Jump</span>
+                </div>
+                <div class="cmd-k-item" onclick="executeCommand('evaluation')">
+                    <div class="flex items-center"><i data-lucide="target"></i> Run Evaluation Benchmark</div>
+                    <span class="kbd-shortcut">Jump</span>
+                </div>
+                <div class="cmd-k-item" onclick="executeCommand('playground')">
+                    <div class="flex items-center"><i data-lucide="terminal"></i> Open Inference Playground</div>
+                    <span class="kbd-shortcut">Jump</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
