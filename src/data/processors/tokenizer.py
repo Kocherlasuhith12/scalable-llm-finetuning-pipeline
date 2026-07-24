@@ -3,7 +3,11 @@
 import logging
 from typing import Any, Optional, Union
 
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+try:
+    from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
+except ImportError:
+    PreTrainedTokenizer = Any  # type: ignore
+    PreTrainedTokenizerFast = Any  # type: ignore
 
 logger = logging.getLogger(__name__)
 

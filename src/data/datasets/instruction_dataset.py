@@ -5,7 +5,10 @@ import logging
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from transformers import PreTrainedTokenizer
+try:
+    from transformers import PreTrainedTokenizer
+except ImportError:
+    PreTrainedTokenizer = Any  # type: ignore
 
 from .base_dataset import BaseDataset
 

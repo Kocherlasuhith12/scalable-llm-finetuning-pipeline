@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 """YAML config loading and merging."""
 
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union, Dict
 
 import yaml
 
 logger = logging.getLogger(__name__)
 
 
-def load_config(path: str | Path) -> dict[str, Any]:
+def load_config(path: str | Path | Union[str, Path]) -> dict[str, Any]:
     """Load YAML config; resolve _base if present."""
     path = Path(path)
     if not path.exists():

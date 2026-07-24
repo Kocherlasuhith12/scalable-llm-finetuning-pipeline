@@ -4,7 +4,11 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Iterator, Optional, Union
 
-from torch.utils.data import Dataset
+try:
+    from torch.utils.data import Dataset
+except ImportError:
+    class Dataset:  # type: ignore
+        pass
 
 
 class BaseDataset(Dataset, ABC):
