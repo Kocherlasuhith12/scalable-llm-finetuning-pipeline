@@ -1,0 +1,12 @@
+# Optional Full GPU Hardware & Distributed Training Dependencies
+torch>=2.0.0
+transformers>=4.35.0
+datasets>=2.14.0
+accelerate>=0.24.0
+peft>=0.6.0
+trl>=0.7.0
+bitsandbytes>=0.41.0
+deepspeed>=0.12.0
+wandb>=0.16.0
+mlflow>=2.9.0
+optuna>=3.4.0
